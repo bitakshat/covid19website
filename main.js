@@ -1,17 +1,29 @@
+var request = new XMLHttpRequest();
 
+// const table = document
+//   .getElementById("table-container")
+//   .getElementsByTagName("tbody")[0];
 
+request.open("GET", "https://api.covid19india.org/data.json", true);
+request.onload = function () {
+  // Begin accessing JSON data here
+  var data = JSON.parse(this.response);
+  const dataLen = Object.keys(data.statewise).length;
+  console.log(data);
 
-const settings = {
-    "async": true,
-    "crossDomain": true,
-    "url": "https://coronavirus-smartable.p.rapidapi.com/stats/v1/US/",
-    "method": "GET",
-    "headers": {
-        "x-rapidapi-key": "913211ba91msh70c390896318456p150682jsne61ce7f5ff8e",
-        "x-rapidapi-host": "coronavirus-smartable.p.rapidapi.com"
-    }
+  const appendData = document.getElementById("tableData");
+  let dataHTML = "";
+
+  for (var i = 1; i < dataLen; i++) {
+    dataHTML += `<tr id="dataContents">
+      <td>${data.statewise[i].state}</td>
+      <td>${data.statewise[i].confirmed}</td>
+      <td>${data.statewise[i].active}</td>
+      <td>${data.statewise[i].recovered}</td>
+      <td>${data.statewise[i].deaths}</td>
+    </tr>`;
+    appendData.innerHTML = dataHTML;
+  }
 };
 
-$.ajax(settings).done(function (response) {
-    console.log(response);
-});
+request.send();
